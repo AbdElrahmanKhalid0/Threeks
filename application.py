@@ -1,8 +1,22 @@
 from flask import Flask, render_template
+import datetime
 
 app = Flask(__name__)
 
-posts=[]
+posts=[
+    {
+        'author': 'Abdelrahman',
+        'title': 'Hola, First one',
+        'body': 'This is The first Post ever',
+        'date': datetime.date.today()
+    },
+    {
+        'author': 'Khalid',
+        'title': 'Hola, not First one',
+        'body': 'This is The second Post ever',
+        'date': datetime.date(year=2014, month=2, day=16)
+    },
+]
 
 @app.route('/')
 @app.route('/home')
@@ -11,7 +25,7 @@ def home():
 
 @app.route('/about')
 def about():
-    return "about"
+    return render_template('about.html')
 
 
 if __name__ == '__main__':

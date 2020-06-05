@@ -1,5 +1,17 @@
 {% extends "layout.html" %}
 {% block title %}Threeks{% endblock %}
 {% block content %}
-  Hola this is home, Threek
+    {% for post in posts %}
+      <div class="post my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2>{{ post.author }}</h2> on <small>{{ post.date }}</small>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.body }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
 {% endblock %}
