@@ -2,15 +2,33 @@
 {% block title %}Login{% endblock %}
 {% block content %}
     <div class="content-section">
-        <form method="POST" action="">
+        <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.email.label }}
-                {{ form.email(class="form-control") }}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control") }}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ form.password.label }}
-                {{ form.password(class="form-control") }}
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div> 
+                {% else %}
+                    {{ form.password(class="form-control") }}
+                {% endif %}
             </div>
             <div class="form-check">
                 {{ form.remember_me(class="form-check-input")}}

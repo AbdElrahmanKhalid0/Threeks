@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, url_for, redirect
+from flask import Flask, render_template, flash, url_for, redirect, request
 from forms import SignupForm, LoginForm
 import datetime
 
@@ -32,18 +32,23 @@ def about():
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     form = SignupForm()
-    if form.validate_on_submit():
-        print('here')
-        flash(f"You have Signed up Successfully as {form.username.data}", "success")
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            flash(f"You have Signed up Successfully as {form.username.data}", "success")
+            return redirect(url_for('home'))
+        else:
+            flash("Please Check your email and password", "danger")
     return render_template('signup.html', form=form)
 
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        print('here')
-        flash(f"You have Logged in Successfully as {form.email.data}", "success")
-        return redirect(url_for('home'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            flash(f"You have Logged in Successfully as {form.email.data}", "success")
+            return redirect(url_for('home'))
+        else:
+            flash("Please Check your email and password", "danger")
     return render_template('login.html', form=form)
 
 if __name__ == '__main__':
