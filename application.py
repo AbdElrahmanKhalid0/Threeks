@@ -1,9 +1,36 @@
 from flask import Flask, render_template, flash, url_for, redirect, request
 from forms import SignupForm, LoginForm
+from flask_sqlalchemy import SQLAlchemy
 import datetime
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '4bcde902803e55ae1211f9ba7f3ab7c1'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Threeks.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), default="default.jpg")
+    password = db.Column(db.String(60), nullable=False)
+    # the lazy=True makes SQLAlchemy loads this only when needed
+    posts = db.relationship('Post', backref='author', lazy=True)
+
+    def __repr__(self):
+        return f"User({self.id}, {self.username}, {self.image_file})"
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    title = db.Column(db.String(50), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Post({self.id}, {self.date}, {self.title})"
 
 posts=[
     {
@@ -52,4 +79,6 @@ def login():
     return render_template('login.html', form=form)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    pass
+    # app.run(host="0.0.0.0", debug=True)
+    db.create_all()
