@@ -1,7 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, url_for, redirect
+from forms import SignupForm, LoginForm
 import datetime
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = '4bcde902803e55ae1211f9ba7f3ab7c1'
 
 posts=[
     {
@@ -27,6 +29,22 @@ def home():
 def about():
     return render_template('about.html')
 
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        print('here')
+        flash(f"You have Signed up Successfully as {form.username.data}", "success")
+    return render_template('signup.html', form=form)
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        print('here')
+        flash(f"You have Logged in Successfully as {form.email.data}", "success")
+        return redirect(url_for('home'))
+    return render_template('login.html', form=form)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

@@ -1,3 +1,3 @@
 # Threeks
 
-A Web Application made using Flassk while Learning it
+A Web Application made using Flask while Learning it

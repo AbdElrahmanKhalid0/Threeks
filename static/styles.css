@@ -35,6 +35,20 @@ nav .logo {
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  width: 510px;
+  margin: 0 auto;
+}
+
+@keyframes fade-out {
+  from { opacity:1; }
+  to { opacity:0; }
+}
+
 @media (max-width: 990px) {
   .container,
   .container-sm {
@@ -46,5 +60,11 @@ nav .logo {
   .container,
   .container-sm {
     max-width: 720;
+  }
+}
+
+@media (max-width: 540px) {
+  .content-section {
+    width: 100%;
   }
 }
