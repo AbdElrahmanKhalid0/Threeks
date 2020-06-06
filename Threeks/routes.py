@@ -1,6 +1,7 @@
 from flask import render_template, flash, url_for, redirect, request
 from Threeks.forms import SignupForm, LoginForm
-from Threeks import app
+from Threeks.models import User, Post
+from Threeks import app, db, bcrypt
 import datetime
 
 posts=[
@@ -32,6 +33,10 @@ def signup():
     form = SignupForm()
     if request.method == 'POST':
         if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
             flash(f"You have Signed up Successfully as {form.username.data}", "success")
             return redirect(url_for('home'))
         else:
@@ -43,8 +48,10 @@ def login():
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            flash(f"You have Logged in Successfully as {form.email.data}", "success")
-            return redirect(url_for('home'))
-        else:
-            flash("Please Check your email and password", "danger")
+            user = User.query.filter_by(email=form.email.data).first()
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                flash(f"You have Logged in Successfully", "success")
+                return redirect(url_for('home'))
+            else:
+                flash("Please Check your email and password", "danger")
     return render_template('login.html', form=form)
