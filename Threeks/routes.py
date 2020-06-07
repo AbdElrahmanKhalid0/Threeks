@@ -1,6 +1,6 @@
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import current_user, login_user, logout_user, login_required
-from Threeks.forms import SignupForm, LoginForm
+from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm
 from Threeks.models import User, Post
 from Threeks import app, db, bcrypt
 import datetime
@@ -71,7 +71,21 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/profile')
+@app.route('/profile', methods=['POST','GET'])
 @login_required
 def profile():
-    return render_template('profile.html', profile=True)
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        current_user.email = form.email.data
+        current_user.username = form.username.data
+        db.session.commit()
+        flash('Your informations Has been updated!', 'success')
+        return redirect(url_for('profile'))
+    
+    # whenever it is a GET request it will provide the fields with the current user data
+    # other than that it won't, and that appears when the user enters an invalid input
+    if request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    
+    return render_template('profile.html', profile=True, form=form)

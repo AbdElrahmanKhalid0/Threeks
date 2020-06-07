@@ -9,5 +9,43 @@
               <p class="text-secondary text-break">{{ current_user.email }}</p>
             </div>
         </div>
+        <br>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.username.label }}
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.username(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.email.label }}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control") }}
+                {% endif %}
+            </div>
+            {{ form.submit(class="btn btn-lg btn-info btn-block text-uppercase my-3") }}
+            {{ form.profile_image.label(class="text-info") }}
+            {{ form.profile_image(class="mt-1 text-secondary") }}
+            {% if form.profile_image.errors %}
+                {% for error in form.profile_image.errors %}
+                    <span class="text-danger row mt-1 ml-1">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </form>
     </div>
 {% endblock %}
