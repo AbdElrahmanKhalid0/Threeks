@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
 {% block title %} {{ current_user.username.title() }} {% endblock %}
 {% block content %}
-    <h1>{{ current_user.username.title() }}</h1>
+    <div class="content-section pl-4">
+        <div class="media row">
+            <img class="rounded-circle profile-img" src="{{ url_for('static', filename='images/' + current_user.image_file ) }}">
+            <div class="col-8 media-body mt-2">
+              <h2 class="account-heading">{{ current_user.username }}</h2>
+              <p class="text-secondary text-break">{{ current_user.email }}</p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

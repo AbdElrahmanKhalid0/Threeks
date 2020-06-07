@@ -44,6 +44,11 @@ nav .logo {
   margin: 0 auto;
 }
 
+.profile-img {
+  width: 120px;
+  height: 120px;
+}
+
 @keyframes fade-out {
   from { opacity:1; }
   to { opacity:0; }
@@ -66,5 +71,14 @@ nav .logo {
 @media (max-width: 540px) {
   .content-section {
     width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .profile-img {
+    margin: 0 auto;
+  }
+  .profile-img + div {
+    max-width: 100%;
   }
 }

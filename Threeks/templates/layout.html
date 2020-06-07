@@ -14,7 +14,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
+      href="{{ url_for('static', filename='css/styles.css') }}"
     />
     {% block additional_links %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
@@ -86,6 +86,7 @@
       {% endwith %}
       {% block content %} {% endblock %}
     </div>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     {% if get_flashed_messages() %}
       <script src="{{ url_for('static', filename='hide_messages.js') }}"></script>
     {% endif %}
