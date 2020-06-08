@@ -1,4 +1,4 @@
-from flask import render_template, flash, url_for, redirect, request
+from flask import render_template, flash, url_for, redirect, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm, PostForm
 from Threeks.models import User, Post
@@ -126,11 +126,18 @@ def add_post():
 
     return render_template('add_post.html', form=form)
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>', methods=['GET','DELETE'])
 def post(post_id):
     # the get_or_404 function returns 404 error if the data wasn't found instead of returning
     # None like the get function
     post = Post.query.get_or_404(post_id)
+    if request.method == 'DELETE':
+        if post.author != current_user:
+            abort(403)
+        db.session.delete(post)
+        db.session.commit()
+        return redirect(url_for('home'))
+
     return render_template('post.html', post=post)
 
 @app.route('/post/<int:post_id>/update', methods=['POST','GET'])
@@ -138,14 +145,18 @@ def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     form = PostForm()
 
+    # this stops the user from getting this page if he isn't the post's author
+    if post.author != current_user:
+        abort(403)
+
+    if request.method == 'GET':
+        form.title.data = post.title
+        form.body.data = post.body
+
     if form.validate_on_submit():
         post.title = form.title.data
         post.body = form.body.data
         db.session.commit()
         return redirect(url_for('post', post_id=post_id))
     
-    if request.method == 'GET':
-        form.title.data = post.title
-        form.body.data = post.body
-
     return render_template('add_post.html', form=form)
