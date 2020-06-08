@@ -12,8 +12,8 @@ import os
 @app.route('/')
 @app.route('/home')
 def home():
-    posts = Post.query.all()
-    posts.reverse()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.date.desc()).paginate(per_page=1, page=page)
     return render_template('home.html', posts=posts)
 
 @app.route('/about')
@@ -122,6 +122,7 @@ def add_post():
         post = Post(title=form.title.data, body=form.body.data, author=current_user)
         db.session.add(post)
         db.session.commit()
+        flash('You Threeked!', 'success')
         return redirect(url_for('home'))
 
     return render_template('add_post.html', form=form)
@@ -150,6 +151,7 @@ def update_post(post_id):
         post.title = form.title.data
         post.body = form.body.data
         db.session.commit()
+        flash('Your Post Has been Updated!', 'success')
         return redirect(url_for('post', post_id=post_id))
     
     return render_template('add_post.html', form=form)
@@ -163,4 +165,5 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
 
+    flash('Your Post has Been Deleted!', 'success')
     return redirect(url_for('home'))
