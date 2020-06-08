@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Post{% endblock %}
+{% block content %}
+    <div class="post my-3">
+        <div class="card">
+        <div class="card-header d-flex post-author-information">
+            <img src="{{ url_for('static', filename='images/' + post.author.image_file) }}" alt="post author profile image" class="post-author-img rounded-circle ml-2">
+            <div class="ml-3">
+            <h2>{{ post.author.username }}</h2> on <small>{{ post.date.strftime('%Y-%m-%d, %H:%M%S') }}</small>
+            </div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.body }}</p>
+        </div>
+        </div>
+    </div>
+    <div class="post-options">
+        <a href="{{ url_for('update_post', post_id=post.id) }}" class="btn btn-secondary" role="button">update</a>
+        <button class="btn btn-danger">X</button>
+    </div>
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import current_user, login_user, logout_user, login_required
-from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm, AddPostForm
+from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm, PostForm
 from Threeks.models import User, Post
 from Threeks import app, db, bcrypt
 from PIL import Image
@@ -117,11 +117,35 @@ def profile():
 
 @app.route('/add_post', methods=['POST','GET'])
 def add_post():
-    form = AddPostForm()
+    form = PostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, body=form.body.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('home'))
+
+    return render_template('add_post.html', form=form)
+
+@app.route('/post/<int:post_id>')
+def post(post_id):
+    # the get_or_404 function returns 404 error if the data wasn't found instead of returning
+    # None like the get function
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', post=post)
+
+@app.route('/post/<int:post_id>/update', methods=['POST','GET'])
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.body = form.body.data
+        db.session.commit()
+        return redirect(url_for('post', post_id=post_id))
+    
+    if request.method == 'GET':
+        form.title.data = post.title
+        form.body.data = post.body
 
     return render_template('add_post.html', form=form)

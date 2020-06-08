@@ -50,7 +50,7 @@ class UpdateProfileForm(FlaskForm):
                 raise ValidationError("Username is not Available!")
 
 
-class AddPostForm(FlaskForm):
+class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     body = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')

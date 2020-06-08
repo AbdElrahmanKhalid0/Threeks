@@ -54,6 +54,11 @@ nav .logo {
   height: 70px;
 }
 
+.post-options {
+  display: inline-block;
+  margin-left: calc((100% - 115.64px) / 2);
+}
+
 @keyframes fade-out {
   from { opacity:1; }
   to { opacity:0; }
