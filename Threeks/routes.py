@@ -1,6 +1,6 @@
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import current_user, login_user, logout_user, login_required
-from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm
+from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm, AddPostForm
 from Threeks.models import User, Post
 from Threeks import app, db, bcrypt
 from PIL import Image
@@ -8,24 +8,12 @@ import datetime
 import secrets
 import os
 
-posts=[
-    {
-        'author': 'Abdelrahman',
-        'title': 'Hola, First one',
-        'body': 'This is The first Post ever',
-        'date': datetime.date.today()
-    },
-    {
-        'author': 'Khalid',
-        'title': 'Hola, not First one',
-        'body': 'This is The second Post ever',
-        'date': datetime.date(year=2014, month=2, day=16)
-    },
-]
 
 @app.route('/')
 @app.route('/home')
 def home():
+    posts = Post.query.all()
+    posts.reverse()
     return render_template('home.html', posts=posts)
 
 @app.route('/about')
@@ -108,7 +96,6 @@ def save_image(image_data):
 @login_required
 def profile():
     form = UpdateProfileForm()
-    print(app.root_path)
     if form.validate_on_submit():
         if form.profile_image.data:
             current_user.image_file = save_image(form.profile_image.data)
@@ -127,3 +114,14 @@ def profile():
         form.email.data = current_user.email
     
     return render_template('profile.html', profile=True, form=form)
+
+@app.route('/add_post', methods=['POST','GET'])
+def add_post():
+    form = AddPostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, body=form.body.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('home'))
+
+    return render_template('add_post.html', form=form)

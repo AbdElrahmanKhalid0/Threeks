@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Add Post{% endblock %}
+{% block content %}
+    <div class="content-section">
+        <form action="" method="POST" enctype="multipart/form-data" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.title.label }}
+                {% if form.title.errors %}
+                    {{ form.title(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.title(class="form-control") }}
+                {% endif%}
+            </div>
+            <div class="form-gorup">
+                {{ form.body.label }}
+                {% if form.body.errors %}
+                    {{ form.body(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.body.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.body(class="form-control") }}
+                {% endif %}
+            </div>
+            {{ form.submit(class="btn btn-lg btn-primary btn-block text-uppercase my-3") }}
+        </form>
+    </div>
+{% endblock %}
