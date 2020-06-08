@@ -85,7 +85,7 @@ nav .logo {
 }
 
 @media (max-width: 500px) {
-  .profile-img {
+  .profile-img:not(.user-information > img) {
     margin: 0 auto;
   }
   .profile-img + div {

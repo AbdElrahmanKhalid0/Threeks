@@ -7,7 +7,7 @@
           <div class="card-header d-flex post-author-information">
             <img src="{{ url_for('static', filename='images/' + post.author.image_file) }}" alt="post author profile image" class="post-author-img rounded-circle ml-2">
             <div class="ml-3">
-              <h2>{{ post.author.username }}</h2> on <small>{{ post.date.strftime('%Y-%m-%d, %H:%M%S') }}</small>
+              <h2><a href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a></h2> on <small>{{ post.date.strftime('%Y-%m-%d, %H:%M:%S') }}</small>
             </div>
           </div>
           <div class="card-body">
@@ -31,7 +31,7 @@
           {% if page %}
             <li class="page-item {{'active' if page == posts.page}}"><a class="page-link" href="{{ url_for('home', page=page) }}">{{ page }}</a></li>
           {% else %}
-            ...
+            <li class="page-item disabled"><a class="page-link" href="{{ url_for('home', page=page) }}" aria-disabled="true">...</a></li>
           {% endif %}
         {% endfor %}
 
