@@ -1,6 +1,6 @@
 from flask import render_template, flash, url_for, redirect, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm, PostForm
+from Threeks.forms import SignupForm, LoginForm, UpdateProfileForm, PostForm, RequestResetPasswordForm, ResetPasswordForm
 from Threeks.models import User, Post
 from Threeks import app, db, bcrypt
 from PIL import Image
@@ -174,3 +174,18 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     posts = Post.query.filter_by(author=user).order_by(Post.date.desc()).paginate(per_page=7, page=page)
     return render_template('user.html', user=user, posts=posts)
+
+@app.route('/reset', methods=['GET', 'POST'])
+def reset_request():
+    form = RequestResetPasswordForm()
+
+    if form.validate_on_submit():
+        pass
+
+    return render_template('reset_request.html', form=form)
+
+@app.route('/reset/<token>')
+def reset_password(token):
+    form = ResetPasswordForm()
+
+    return render_template('reset_password.html', form=form)

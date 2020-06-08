@@ -1,6 +1,8 @@
 import datetime
-from Threeks import db, login_manager
+from Threeks import db, login_manager, app
 from flask_login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+import itsdangerous
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -14,6 +16,21 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     # the lazy=True makes SQLAlchemy loads this only when needed
     posts = db.relationship('Post', backref='author', lazy=True)
+
+    # returns a token that will expire after 30 mins by default
+    def get_toke(self, expiring_time=1800):
+        s = Serializer(app.config['SECRET_KEY'], expiring_time)
+        return s.dumps({'user_id':self.id}).decode('utf-8')
+
+    # this will check if the token is valid or not
+    @staticmethod
+    def check_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)
+        except itsdangerous.exc.SignatureExpired:
+            return None
+        return User.query.get(user_id)
 
     def __repr__(self):
         return f"User({self.id}, {self.username}, {self.image_file})"
