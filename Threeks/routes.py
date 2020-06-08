@@ -126,18 +126,11 @@ def add_post():
 
     return render_template('add_post.html', form=form)
 
-@app.route('/post/<int:post_id>', methods=['GET','DELETE'])
+@app.route('/post/<int:post_id>')
 def post(post_id):
     # the get_or_404 function returns 404 error if the data wasn't found instead of returning
     # None like the get function
     post = Post.query.get_or_404(post_id)
-    if request.method == 'DELETE':
-        if post.author != current_user:
-            abort(403)
-        db.session.delete(post)
-        db.session.commit()
-        return redirect(url_for('home'))
-
     return render_template('post.html', post=post)
 
 @app.route('/post/<int:post_id>/update', methods=['POST','GET'])
@@ -160,3 +153,14 @@ def update_post(post_id):
         return redirect(url_for('post', post_id=post_id))
     
     return render_template('add_post.html', form=form)
+
+@app.route('/post/<int:post_id>/delete', methods=['POST'])
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(url_for('home'))
