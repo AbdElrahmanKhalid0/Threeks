@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
 
     # returns a token that will expire after 30 mins by default
-    def get_toke(self, expiring_time=1800):
+    def get_token(self, expiring_time=1800):
         s = Serializer(app.config['SECRET_KEY'], expiring_time)
         return s.dumps({'user_id':self.id}).decode('utf-8')
 
@@ -27,8 +27,8 @@ class User(db.Model, UserMixin):
     def check_token(token):
         s = Serializer(app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(token)
-        except itsdangerous.exc.SignatureExpired:
+            user_id = s.loads(token)['user_id']
+        except:
             return None
         return User.query.get(user_id)
 
