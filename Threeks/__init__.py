@@ -24,8 +24,10 @@ def create_app(config=Config):
     from Threeks.users import users
     from Threeks.posts import posts
     from Threeks.main import main
+    from Threeks.errors import errors
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
+    app.register_blueprint(errors)
 
     return app
