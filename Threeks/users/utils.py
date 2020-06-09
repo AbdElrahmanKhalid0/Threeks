@@ -1,15 +1,15 @@
 import secrets
 import os
 from PIL import Image
-from Threeks import mail, app
+from Threeks import mail
 from flask_mail import Message
-from flask import url_for
+from flask import url_for, current_app
 
 def save_image(image_data):
     random_name = secrets.token_hex(8)
     _, img_ext = os.path.splitext(image_data.filename)
     image_name = random_name + img_ext
-    image_path = os.path.join(app.root_path, r'static\images' ,image_name)
+    image_path = os.path.join(current_app.root_path, r'static\images' ,image_name)
 
     img = Image.open(image_data)
     img_width, img_height = img.size

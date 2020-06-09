@@ -1,5 +1,6 @@
 import datetime
-from Threeks import db, login_manager, app
+from Threeks import db, login_manager
+from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import itsdangerous
@@ -19,13 +20,13 @@ class User(db.Model, UserMixin):
 
     # returns a token that will expire after 30 mins by default
     def get_token(self, expiring_time=1800):
-        s = Serializer(app.config['SECRET_KEY'], expiring_time)
+        s = Serializer(current_app.config['SECRET_KEY'], expiring_time)
         return s.dumps({'user_id':self.id}).decode('utf-8')
 
     # this will check if the token is valid or not
     @staticmethod
     def check_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']
         except:
