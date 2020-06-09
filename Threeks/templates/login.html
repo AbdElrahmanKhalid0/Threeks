@@ -37,7 +37,7 @@
             {{ form.submit(class="btn btn-lg btn-primary btn-block text-uppercase my-3") }}
         </form>
         <hr class="my-2">
-        <p class="m-1"><a href="{{ url_for('signup') }}">Don't Have An Account?</a></p>
-        <p class="m-1"><a href="{{ url_for('reset_request') }}">forgot Password?</a></p>
+        <p class="m-1"><a href="{{ url_for('users.signup') }}">Don't Have An Account?</a></p>
+        <p class="m-1"><a href="{{ url_for('users.reset_request') }}">forgot Password?</a></p>
    </div>
 {% endblock %}

@@ -24,4 +24,9 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'primary'
 mail = Mail(app)
 
-from Threeks import routes
+from Threeks.users import users
+from Threeks.posts import posts
+from Threeks.main import main
+app.register_blueprint(users)
+app.register_blueprint(posts)
+app.register_blueprint(main)
